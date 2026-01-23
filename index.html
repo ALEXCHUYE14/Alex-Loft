@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Store</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="style.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: { colors: { gold: '#D4AF37', whatsapp: '#25D366' } }
+            }
+        }
+    </script>
+
+</head>
+<body class="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+
+    <div id="loader">
+        <h1 class="text-white text-4xl font-black italic mb-4">ALEX<span class="text-gold">.STORE</span></h1>
+        <div class="w-24 h-1 bg-white/20 rounded-full overflow-hidden">
+            <div class="h-full bg-gold w-1/2 animate-[loading_1.5s_infinite]"></div>
+        </div>
+    </div>
+    
+    <nav class="fixed top-0 w-full z-[100] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 md:h-20 flex justify-between items-center">
+            
+            <button onclick="showView('home-view')" class="text-xl font-black uppercase italic">
+                ALEX<span class="text-gold">.STORE</span>
+            </button>
+
+            <div class="hidden lg:flex items-center gap-10">
+                <div class="flex gap-8 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                    <button onclick="filterBy('Zapatillas')" class="hover:text-gold transition">Zapatillas</button>
+                    <button onclick="filterBy('Hombre')" class="hover:text-gold transition">Hombre</button>
+                    <button onclick="filterBy('Mujer')" class="hover:text-gold transition">Mujer</button>
+                    <button onclick="filterBy('Accesorios')" class="hover:text-gold transition">Accesorios</button>
+                </div>
+                
+                <div class="relative">
+                    <input type="text" onkeyup="searchProducts(this.value)" placeholder="Buscar producto..." 
+                        class="bg-gray-100 dark:bg-slate-800 rounded-full py-2 px-10 text-xs w-56 focus:w-72 transition-all outline-none border border-transparent focus:border-gold">
+                    <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800">
+                    <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                    <i data-lucide="moon" class="dark:hidden w-5 h-5 text-slate-600"></i>
+                </button>
+                <button onclick="toggleCart()" class="relative p-2">
+                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-gold text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="drawer fixed inset-y-0 left-0 w-72 bg-white dark:bg-slate-900 z-[110] shadow-2xl -translate-x-full lg:hidden p-8">
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-black italic">MENU</span>
+            <button onclick="toggleMobileMenu()"><i data-lucide="x"></i></button>
+        </div>
+        <div class="space-y-6">
+            <div class="relative">
+                <input type="text" onkeyup="searchProducts(this.value)" placeholder="Buscar..." class="w-full bg-gray-100 dark:bg-slate-800 p-3 pl-10 rounded-xl text-xs outline-none">
+                <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+            </div>
+            <div class="flex flex-col gap-4 font-black uppercase text-xs tracking-widest">
+                <button onclick="filterBy('Zapatillas'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Zapatillas</button>
+                <button onclick="filterBy('Hombre'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Hombre</button>
+                <button onclick="filterBy('Mujer'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Mujer</button>
+                <button onclick="filterBy('Accesorios'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Accesorios</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/51924996961?text=Hola%20Alex%20Store,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp">
+        <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
+    </a>
+
+    <main id="home-view" class="view active animate__animated animate__fadeIn">
+        <div class="relative h-[70vh] md:h-[95vh] bg-black overflow-hidden pt-16">
+            <div id="slider">
+                <div class="slide active">
+                    <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=1500" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
+                        <h1 class="text-5xl md:text-9xl font-black italic uppercase animate__animated animate__fadeInDown">ALEX DROP</h1>
+                        <p class="mt-4 tracking-[0.5em] text-[10px] font-bold">LO ÚLTIMO EN SNEAKERS & STREETWEAR</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1500" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
+                        <h2 class="text-5xl md:text-9xl font-black italic uppercase">URBAN SOUL</h2>
+                        <p class="mt-4 tracking-[0.5em] text-[10px] font-bold">DEFINE TU ESTILO PROPIO</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="max-w-7xl mx-auto px-4 py-20">
+            <h3 id="cat-title" class="text-3xl font-black uppercase italic mb-12 tracking-tighter">Explora la tienda</h3>
+            <div id="grid-container" class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"></div>
+        </section>
+
+        <section class="bg-gray-50 dark:bg-slate-800/50 py-24 overflow-hidden">
+            <div class="max-w-4xl mx-auto px-4">
+                <h4 class="text-center font-black uppercase italic mb-12 tracking-widest">Reseñas de la comunidad</h4>
+                <div class="relative overflow-hidden rounded-[3rem] bg-white dark:bg-slate-900 shadow-2xl p-10 md:p-20 border dark:border-slate-800">
+                    <div id="testimonial-track" class="testimonial-track">
+                        </div>
+                </div>
+                
+                <div class="mt-16 max-w-md mx-auto bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl">
+                    <p class="text-center font-black text-[9px] uppercase mb-6 tracking-[0.3em]">Cuéntanos tu experiencia</p>
+                    <input type="text" id="rev-name" placeholder="Tu Nombre" class="w-full bg-gray-50 dark:bg-slate-800 p-4 rounded-xl text-xs mb-4 outline-none border dark:border-slate-700">
+                    <textarea id="rev-text" placeholder="Escribe tu comentario..." class="w-full bg-gray-50 dark:bg-slate-800 p-4 rounded-xl text-xs h-24 mb-4 outline-none border dark:border-slate-700"></textarea>
+                    <button onclick="addReview()" class="w-full bg-black dark:bg-gold dark:text-black text-white font-black py-4 rounded-xl text-[10px] uppercase tracking-widest transition-transform active:scale-95">Publicar Comentario</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 py-24 grid lg:grid-cols-2 gap-20">
+            <div>
+                <h4 class="text-3xl font-black uppercase italic mb-8">Información Alex Store</h4>
+                <div class="space-y-6 text-xs font-bold uppercase tracking-widest">
+                    <div class="flex justify-between border-b dark:border-slate-800 pb-4"><span>Tienda Online</span><span class="text-green-500">24 HORAS ACTIVA</span></div>
+                    <div class="flex justify-between border-b dark:border-slate-800 pb-4"><span>Envíos Olva / Shalom</span><span>Lunes a Sábado</span></div>
+                    <div class="flex justify-between border-b dark:border-slate-800 pb-4"><span>Atención Directa</span><span>9:00 AM - 10:00 PM</span></div>
+                </div>
+            </div>
+            <div class="bg-slate-900 text-white p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                <i data-lucide="shield-check" class="absolute -right-8 -bottom-8 w-48 h-48 opacity-5"></i>
+                <h5 class="text-xl font-black mb-8 italic uppercase tracking-tighter">Compromiso de Calidad</h5>
+                <p class="text-xs text-gray-400 mb-8 leading-relaxed">Todos nuestros productos pasan por un control de calidad antes del envío. Garantizamos la autenticidad y el mejor acabado del mercado.</p>
+                <button onclick="window.open('https://wa.me/51924996961')" class="bg-gold text-black font-black px-8 py-4 rounded-xl text-[10px] uppercase tracking-widest">Hablar con un asesor</button>
+            </div>
+        </section>
+    </main>
+
+    <main id="detail-view" class="view animate__animated animate__fadeIn">
+        <section class="max-w-6xl mx-auto px-4 py-32">
+            <button onclick="showView('home-view')" class="text-[10px] font-black uppercase mb-10 opacity-50 flex items-center gap-2"><i data-lucide="arrow-left" class="w-3 h-3"></i> Volver a la tienda</button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div class="relative group">
+                    <img id="pdp-img" src="" class="w-full aspect-square object-cover rounded-[3rem] bg-gray-50 dark:bg-slate-800 shadow-2xl transition duration-500 group-hover:scale-[1.02]">
+                </div>
+                <div>
+                    <span id="pdp-cat" class="text-gold font-black italic text-xs uppercase tracking-[0.2em]"></span>
+                    <h2 id="pdp-name" class="text-5xl font-black uppercase italic mt-4 mb-6 leading-tight"></h2>
+                    <p id="pdp-price" class="text-4xl font-light mb-10"></p>
+                    
+                    <div class="h-px bg-gray-100 dark:bg-slate-800 mb-8"></div>
+
+                    <div class="mb-8">
+                        <p class="text-[10px] font-black uppercase mb-4 tracking-widest">Elegir Color:</p>
+                        <div class="flex gap-4">
+                            <button onclick="setCol('Negro', this)" class="color-dot w-12 h-12 rounded-full bg-black border border-white/20 transition hover:scale-110"></button>
+                            <button onclick="setCol('Blanco', this)" class="color-dot w-12 h-12 rounded-full bg-white border border-gray-300 transition hover:scale-110"></button>
+                            <button onclick="setCol('Gris', this)" class="color-dot w-12 h-12 rounded-full bg-gray-500 border border-white/20 transition hover:scale-110"></button>
+                        </div>
+                    </div>
+
+                    <div id="size-section" class="mb-10">
+                        <p class="text-[10px] font-black uppercase mb-4 tracking-widest">Talla Disponible:</p>
+                        <div id="size-grid" class="grid grid-cols-4 gap-2"></div>
+                    </div>
+
+                    <div class="flex gap-4 pt-6">
+                        <div class="flex items-center border dark:border-slate-700 rounded-2xl w-32 bg-gray-50 dark:bg-slate-800">
+                            <button onclick="updateQty(-1)" class="flex-1 py-4 font-bold">-</button>
+                            <span id="pdp-qty" class="flex-1 text-center font-black">1</span>
+                            <button onclick="updateQty(1)" class="flex-1 py-4 font-bold">+</button>
+                        </div>
+                        <button onclick="addToCart()" class="flex-1 bg-black dark:bg-gold dark:text-black text-white font-black rounded-2xl uppercase text-[10px] tracking-widest hover:scale-[1.02] transition-all shadow-xl">Agregar a la Bolsa</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="cart-drawer" class="drawer fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-900 z-[120] p-8 shadow-2xl translate-x-full flex flex-col">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="font-black italic text-xl uppercase italic">Tu Carrito</h2>
+            <button onclick="toggleCart()"><i data-lucide="x"></i></button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto space-y-6"></div>
+        <div class="pt-8 border-t dark:border-slate-800">
+            <div class="flex justify-between text-3xl font-black mb-8 italic">
+                <span>TOTAL</span>
+                <span id="total-price" class="text-gold">S/ 0.00</span>
+            </div>
+            <button onclick="openPaymentModal()" class="w-full bg-black dark:bg-gold dark:text-black text-white py-6 font-black uppercase text-[10px] tracking-widest rounded-2xl">Proceder al Pago</button>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-md p-10 animate__animated animate__zoomIn">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="font-black italic uppercase">Métodos de Pago</h3>
+                <button onclick="closePaymentModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="space-y-4">
+                <button onclick="sendOrder('YAPE')" class="w-full bg-[#742484] text-white p-6 rounded-2xl flex items-center justify-between group">
+                    <span class="font-black italic">YAPE / PLIN</span>
+                    <i data-lucide="smartphone"></i>
+                </button>
+                <button onclick="sendOrder('INTERBANK')" class="w-full bg-[#0039A6] text-white p-6 rounded-2xl flex flex-col items-start relative group">
+                    <span class="font-black italic">TRANSFERENCIA BANCARIA</span>
+                    <span class="text-[9px] font-bold mt-1 opacity-70 italic">INTERBANK: 003-773-013259712394-93</span>
+                    <i data-lucide="credit-card" class="absolute right-4 top-6 opacity-20 w-12 h-12"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-slate-950 border-t dark:border-none pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
+            <div>
+                <h4 class="text-2xl font-black italic mb-6 uppercase">ALEX<span class="text-gold">.STORE</span></h4>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-loose">Calzado y prendas exclusivas con envíos a todo el Perú vía Olva Courier y Shalom.</p>
+            </div>
+            <div>
+                <h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Social</h5>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="#" class="w-10 h-10 border dark:border-slate-800 rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-10 h-10 border dark:border-slate-800 rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition"><i data-lucide="music-2" class="w-4 h-4"></i></a>
+                </div>
+            </div>
+            <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Contacto</h5><p class="text-xs font-bold uppercase">WhatsApp: +51 924 996 961<br>Lima - Perú</p></div>
+            <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Legal</h5><p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 Alex Store - Todos los derechos reservados.</p></div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

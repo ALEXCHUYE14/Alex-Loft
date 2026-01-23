@@ -1,0 +1,28 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; }
+        .slide.active { opacity: 1; }
+        .drawer { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .color-dot.selected::after { content: '✓'; color: white; font-weight: bold; }
+        .testimonial-track { display: flex; transition: transform 0.5s ease-in-out; }
+        .testimonial-card { min-width: 100%; }
+        
+        #loader { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* Efecto Pulsante WhatsApp */
+        .btn-whatsapp {
+            position: fixed; bottom: 24px; right: 24px; z-index: 150;
+            background-color: #25D366; color: white; border-radius: 50%;
+            width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: pulse-wa 2s infinite;
+        }
+        @keyframes pulse-wa {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+ @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
