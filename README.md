@@ -1,74 +1,65 @@
-🛒 Alex Store | Premium Streetwear E-commerce
-Alex Store es una plataforma de e-commerce de alto impacto visual diseñada para la venta de sneakers y moda urbana. Esta versión v10 incluye una arquitectura híbrida de navegación, carrito persistente y cierre de ventas automatizado por WhatsApp.
+🛒 M & A Home & Style — Tienda de Decoración y Moda
 
-🚀 Características Principales
-Menú de Alta Eficiencia: Navegación por categorías y buscador integrados en la misma línea.
+`M & A Home & Style` es una tienda web híbrida que combina artículos para el hogar (decoración, muebles, cocina, dormitorio) y moda (polos, camisas, pantalones, zapatillas). Esta versión incluye un hero slider dual (HOME / STYLE), colecciones destacadas, carrito persistente, autenticación con Firebase (email, Google, Facebook), notificaciones push (FCM) y captura de formularios con Netlify.
 
-Checkout Inteligente: Envía pedidos detallados (Producto, Talla, Color, Total) directamente al WhatsApp del vendedor.
+**Características Principales:**
+- **Hero Slider Home/Style:** Una única portada que rota entre una imagen para Hogar y otra para Style (cada 3 segundos), con CTA para ver cada colección.
+- **Colecciones destacadas:** Sección con filas para `Hogar` y `Style` y subfiltros (Decoración, Sala, Cocina, Dormitorio, Polos, Camisas, Pantalones, Zapatillas).
+- **Catálogo mixto:** Soporta productos de hogar y moda en la misma galería.
+- **Autenticación:** Registro/inicio de sesión con email, Google y Facebook (Firebase Auth).
+- **Notificaciones push:** Soporta Firebase Cloud Messaging (FCM) mediante `sw.js` para notificaciones de ofertas.
+- **Formularios Netlify:** Los formularios de login/registro están marcados con `data-netlify="true"` como respaldo y para capturar leads al desplegar en Netlify.
+- **Checkout vía WhatsApp:** El pedido se compone y abre una conversación WhatsApp con los detalles (productos, cantidades, total).
 
-Marketing Psicológico: * Urgencia: Banner superior con contador de cuenta regresiva.
+**Tecnologías:**
+- Diseño: Tailwind CSS + Animate.css
+- Lógica: JavaScript (ES6+)
+- Autenticación y BBDD en cliente: Firebase Auth + Firestore (opcional, recomendado)
+- Mensajería: Firebase Cloud Messaging (FCM)
+- Service Worker: `sw.js` para recibir notificaciones en background
+- Hosting / Forms: Netlify
 
-Prueba Social: Carrusel de testimonios dinámicos.
+**Archivos clave:**
+- `index.html` — HTML principal, meta SEO, hero slider, colecciones y modal de login.
+- `script.js` — Lógica de UI, catálogo, filtros, slider, colecciones y autenticación.
+- `sw.js` — Service worker configurado para FCM.
 
-Celebración: Efecto de confeti al finalizar el pedido.
+Cómo editar el catálogo
+- Edita el array `products` en `script.js`.
+- Cada producto debe tener: `{ id, name, price, category, img }`.
+- Categorías actuales soportadas: `Decoración`, `Sala`, `Cocina`, `Dormitorio`, `Moda`, `Zapatillas`.
 
-Experiencia de Usuario (UX): Modo oscuro nativo, loaders de marca y diseño 100% responsivo.
+Ejemplo de producto:
+```js
+{ id: 12, name: "Polo Básico Premium", price: 89, category: "Moda", img: "https://images.unsplash.com/...?q=80&w=800" }
+```
 
-Persistencia: El carrito se guarda automáticamente en el navegador del cliente.
+Configuración rápida — Firebase
+1. Crea un proyecto en https://console.firebase.google.com
+2. Habilita Authentication: Email/Contraseña, Google y Facebook (en Providers).
+3. Crea una Firestore DB para almacenar usuarios y tokens (opcional).
+4. Habilita Cloud Messaging y obtén tu **VAPID key**.
+5. Reemplaza los placeholders en `index.html` (el bloque de SDK) y en `sw.js` con tus credenciales:
 
-🛠️ Tecnologías
-Diseño: Tailwind CSS + Animate.css
+- `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`
+- `vapidKey` / `YOUR_VAPID_KEY` en `script.js` para `getToken()`
 
-Iconografía: Lucide Icons
+Notas: Para Facebook necesitas configurar una App en https://developers.facebook.com y añadir el dominio autorizado.
 
-Lógica: JavaScript Vanilla (ES6+)
+Netlify (formularios y despliegue)
+- Los formularios de login/registro incluyen `data-netlify="true"` y `name`/`form-name` para que Netlify los capture automáticamente.
+- Para desplegar: crea un repositorio Git o arrastra los archivos a Netlify. Si conectas un repo, Netlify se encargará del build (no hay build en este proyecto estático).
 
-Efectos: Canvas-Confetti API
+Pruebas locales
+1. Abre `index.html` en un navegador moderno (Chrome o Edge recomendado).
+2. Prueba el slider; debe rotar cada 3s.
+3. Prueba los botones `Ver colección Hogar` y `Ver colección Style` — deben filtrar la galería.
+4. Regístrate e inicia sesión (si configuras Firebase) y acepta notificaciones para almacenar el token en Firestore.
 
-Pasarela: WhatsApp Business API integration
+Consideraciones de seguridad
+- Este proyecto guarda información útil en el cliente para demos. En producción, mueve la lógica de usuarios y tokens a un backend seguro.
+- Nunca publiques claves privadas (use environment variables o Netlify Functions para operaciones seguras).
 
-📦 Cómo añadir o modificar productos
-Para gestionar tu catálogo de 35 o más productos, debes editar la constante products dentro de la etiqueta <script> al final del archivo HTML.
-
-Estructura de un producto:
-Cada producto debe seguir este formato exacto para que la tienda lo muestre correctamente:
-
-JavaScript
-{
-    id: 1,                          // ID único (incremental)
-    name: "Nombre del Producto",    // Nombre que verá el cliente
-    price: 899,                     // Precio en números (sin S/)
-    category: "Zapatillas",         // Categoría: "Zapatillas", "Hombre", "Mujer" o "Accesorios"
-    img: "URL_DE_LA_IMAGEN"         // Enlace directo a la foto (puedes usar Unsplash o subir las tuyas)
-}
-Pasos para subir productos reales:
-Busca la línea const products = [...].
-
-Elimina los objetos de prueba (o el bucle while que genera copias).
-
-Pega tus productos siguiendo la estructura de arriba.
-
-Tallas automáticas: El sistema detecta la categoría. Si es "Zapatillas", mostrará tallas numéricas (38, 40, etc.). Si es ropa, mostrará tallas S, M, L, XL.
-
-⚙️ Configuración Personalizada
-Para que la tienda funcione con tus datos personales, ajusta lo siguiente:
-
-Número de WhatsApp: Busca el número 51924996961 en el código y reemplázalo por el tuyo (con código de país).
-
-Datos Bancarios: En el Modal de Pago (dentro del HTML), cambia el número de cuenta Interbank por el tuyo actual.
-
-Contador de Oferta: Puedes ajustar el tiempo del contador editando la variable let timer = 3600 * 2.5; (actualmente configurado para 2.5 horas).
-
-🌐 Despliegue (Hosting)
-Al ser un proyecto de un solo archivo (index.html), puedes alojarlo gratis en:
-
-GitHub Pages (Recomendado)
-
-Netlify
-
-Vercel
-
-Solo arrastra el archivo al panel de control de cualquiera de estos servicios y tu tienda estará en línea en segundos.
-
-👤 Créditos
-Alex Store Dev - Lima, Perú - 2026 "Elevando el estilo urbano, un pedido a la vez."
+Contacto y créditos
+- M & A Home & Style — Lima, Perú — 2026
+- Si quieres, puedo ayudarte a: configurar Firebase, generar VAPID keys, o añadir Netlify Functions para manejar suscripciones y enviar notificaciones.

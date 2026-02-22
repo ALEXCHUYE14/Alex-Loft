@@ -3,12 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex Store</title>
+    <title>M & A Home & Style</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Descubre las últimas tendencias en decoración y estilo para el hogar en M & A Home & Style. Encuentra muebles, decoración, cocina y dormitorio exclusivos. Regístrate para recibir ofertas y notificaciones.">
+    <meta name="keywords" content="decoración, muebles, hogar, estilo, M & A Home & Style, ofertas, notificaciones, registro, sala, cocina, dormitorio">
+    <meta name="author" content="M & A Home & Style">
+    <link rel="canonical" href="https://mandahomestyle.com">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="M & A Home & Style - Lo Último para el hogar y Moda">
+    <meta property="og:description" content="Descubre las últimas tendencias en decoración y estilo para el hogar. Regístrate para ofertas exclusivas.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1500">
+    <meta property="og:url" content="https://mandahomestyle.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="M & A Home & Style">
+    <meta name="twitter:description" content="Lo último en decoración y estilo para el hogar">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1500">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="style.css">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": "M & A Home & Style",
+      "description": "Tienda especializada en decoración y estilo para el hogar con envíos a todo Perú",
+      "url": "https://mandahomestyle.com",
+      "telephone": "+51-924996961",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lima",
+        "addressCountry": "PE"
+      },
+      "sameAs": [
+        "https://www.instagram.com/mandahomestyle",
+        "https://wa.me/51924996961"
+      ]
+    }
+    </script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+      import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
+      
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+      
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const messaging = getMessaging(app);
+      
+      window.auth = auth;
+      window.db = db;
+      window.messaging = messaging;
+      window.GoogleAuthProvider = GoogleAuthProvider;
+      window.FacebookAuthProvider = FacebookAuthProvider;
+      window.signInWithPopup = signInWithPopup;
+      window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+      window.onAuthStateChanged = onAuthStateChanged;
+      window.signOut = signOut;
+      window.doc = doc;
+      window.setDoc = setDoc;
+      window.getDoc = getDoc;
+      window.getToken = getToken;
+      window.onMessage = onMessage;
+    </script>
     
     <script>
         tailwind.config = {
@@ -23,7 +100,7 @@
 <body class="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">
 
     <div id="loader">
-        <h1 class="text-white text-4xl font-black italic mb-4">ALEX<span class="text-gold">.STORE</span></h1>
+        <h1 class="text-white text-4xl font-black italic mb-4">M & A<span class="text-gold block text-lg uppercase">HOME & STYLE</span></h1>
         <div class="w-24 h-1 bg-white/20 rounded-full overflow-hidden">
             <div class="h-full bg-gold w-1/2 animate-[loading_1.5s_infinite]"></div>
         </div>
@@ -32,16 +109,19 @@
     <nav class="fixed top-0 w-full z-[100] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 h-16 md:h-20 flex justify-between items-center">
             
-            <button onclick="showView('home-view')" class="text-xl font-black uppercase italic">
-                ALEX<span class="text-gold">.STORE</span>
+            <button onclick="showView('home-view')" class="text-center">
+                <div class="text-xl font-black uppercase italic">M & A</div>
+                <div class="text-xs text-gold uppercase">HOME & STYLE</div>
             </button>
 
             <div class="hidden lg:flex items-center gap-10">
                 <div class="flex gap-8 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                    <button onclick="filterBy('Decoración')" class="hover:text-gold transition">Decoración</button>
+                    <button onclick="filterBy('Sala')" class="hover:text-gold transition">Sala</button>
+                    <button onclick="filterBy('Cocina')" class="hover:text-gold transition">Cocina</button>
+                    <button onclick="filterBy('Dormitorio')" class="hover:text-gold transition">Dormitorio</button>
+                    <button onclick="filterBy('Moda')" class="hover:text-gold transition">Moda</button>
                     <button onclick="filterBy('Zapatillas')" class="hover:text-gold transition">Zapatillas</button>
-                    <button onclick="filterBy('Hombre')" class="hover:text-gold transition">Hombre</button>
-                    <button onclick="filterBy('Mujer')" class="hover:text-gold transition">Mujer</button>
-                    <button onclick="filterBy('Accesorios')" class="hover:text-gold transition">Accesorios</button>
                 </div>
                 
                 <div class="relative">
@@ -60,6 +140,9 @@
                     <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                     <span id="cart-count" class="absolute top-0 right-0 bg-gold text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </button>
+                <button onclick="showLoginModal()" class="p-2">
+                    <i data-lucide="user" class="w-6 h-6"></i>
+                </button>
                 <button onclick="toggleMobileMenu()" class="lg:hidden p-2"><i data-lucide="menu"></i></button>
             </div>
         </div>
@@ -76,33 +159,45 @@
                 <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
             </div>
             <div class="flex flex-col gap-4 font-black uppercase text-xs tracking-widest">
+                <button onclick="filterBy('Decoración'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Decoración</button>
+                <button onclick="filterBy('Sala'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Sala</button>
+                <button onclick="filterBy('Cocina'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Cocina</button>
+                <button onclick="filterBy('Dormitorio'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Dormitorio</button>
+                <button onclick="filterBy('Moda'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Moda</button>
                 <button onclick="filterBy('Zapatillas'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Zapatillas</button>
-                <button onclick="filterBy('Hombre'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Hombre</button>
-                <button onclick="filterBy('Mujer'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Mujer</button>
-                <button onclick="filterBy('Accesorios'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Accesorios</button>
             </div>
         </div>
     </div>
 
-    <a href="https://wa.me/51924996961?text=Hola%20Alex%20Store,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp">
+    <a href="https://wa.me/51924996961?text=Hola%20M%20%26%20A%20Home%20%26%20Style,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp">
         <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
     </a>
 
     <main id="home-view" class="view active animate__animated animate__fadeIn">
-        <div class="relative h-[70vh] md:h-[95vh] bg-black overflow-hidden pt-16">
-            <div id="slider">
-                <div class="slide active">
-                    <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=1500" class="w-full h-full object-cover opacity-60">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
-                        <h1 class="text-5xl md:text-9xl font-black italic uppercase animate__animated animate__fadeInDown">ALEX DROP</h1>
-                        <p class="mt-4 tracking-[0.5em] text-[10px] font-bold">LO ÚLTIMO EN SNEAKERS & STREETWEAR</p>
+        <div class="pt-16">
+            <div id="hero-slider" class="max-w-7xl mx-auto px-4 h-[70vh] md:h-[95vh] relative overflow-hidden rounded-3xl shadow-lg">
+                <div class="slide active absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1500" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/30 flex flex-col items-start justify-end p-8">
+                        <div class="text-white">
+                            <h2 class="text-4xl md:text-6xl font-black uppercase">HOME</h2>
+                            <p class="mt-2 text-sm tracking-widest font-bold">Decoración · Sala · Cocina · Dormitorio</p>
+                        </div>
+                        <div class="mt-6">
+                            <button onclick="filterByGroup('home')" class="bg-gold text-black font-bold py-3 px-6 rounded-full">Ver colección Hogar</button>
+                        </div>
                     </div>
                 </div>
-                <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1500" class="w-full h-full object-cover opacity-60">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
-                        <h2 class="text-5xl md:text-9xl font-black italic uppercase">URBAN SOUL</h2>
-                        <p class="mt-4 tracking-[0.5em] text-[10px] font-bold">DEFINE TU ESTILO PROPIO</p>
+                <div class="slide absolute inset-0">
+                    <img src="img/Moda.png" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/30 flex flex-col items-start justify-end p-8">
+                        <div class="text-white">
+                            <h2 class="text-4xl md:text-6xl font-black uppercase">STYLE</h2>
+                            <p class="mt-2 text-sm tracking-widest font-bold">Moda · Polos · Camisas · Pantalones · Zapatillas</p>
+                        </div>
+                        <div class="mt-6">
+                            <button onclick="filterByGroup('style')" class="bg-gold text-black font-bold py-3 px-6 rounded-full">Ver colección Style</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +206,37 @@
         <section class="max-w-7xl mx-auto px-4 py-20">
             <h3 id="cat-title" class="text-3xl font-black uppercase italic mb-12 tracking-tighter">Explora la tienda</h3>
             <div id="grid-container" class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"></div>
+        </section>
+
+        <!-- Colecciones destacadas -->
+        <section class="max-w-7xl mx-auto px-4 py-16">
+            <h3 class="text-3xl font-black uppercase italic mb-8 tracking-tighter">Colecciones destacadas</h3>
+
+            <div class="mb-10">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-xl font-black uppercase">Hogar</h4>
+                    <div class="flex gap-2">
+                        <button onclick="filterCollection('home','Decoración')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Decoración</button>
+                        <button onclick="filterCollection('home','Sala')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Sala</button>
+                        <button onclick="filterCollection('home','Cocina')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Cocina</button>
+                        <button onclick="filterCollection('home','Dormitorio')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Dormitorio</button>
+                    </div>
+                </div>
+                <div id="coleccion-home" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-xl font-black uppercase">Style</h4>
+                    <div class="flex gap-2">
+                        <button onclick="filterCollection('style','Moda')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Polos</button>
+                        <button onclick="filterCollection('style','Moda')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Camisas</button>
+                        <button onclick="filterCollection('style','Moda')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Pantalones</button>
+                        <button onclick="filterCollection('style','Zapatillas')" class="px-3 py-1 text-xs bg-gray-100 dark:bg-slate-700 rounded">Zapatillas</button>
+                    </div>
+                </div>
+                <div id="coleccion-style" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            </div>
         </section>
 
         <section class="bg-gray-50 dark:bg-slate-800/50 py-24 overflow-hidden">
@@ -228,7 +354,7 @@
     <footer class="bg-white dark:bg-slate-950 border-t dark:border-none pt-20 pb-10">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
             <div>
-                <h4 class="text-2xl font-black italic mb-6 uppercase">ALEX<span class="text-gold">.STORE</span></h4>
+                <h4 class="text-2xl font-black italic mb-6 uppercase">M & A<span class="text-gold block text-lg">HOME & STYLE</span></h4>
                 <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-loose">Calzado y prendas exclusivas con envíos a todo el Perú vía Olva Courier y Shalom.</p>
             </div>
             <div>
@@ -239,9 +365,54 @@
                 </div>
             </div>
             <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Contacto</h5><p class="text-xs font-bold uppercase">WhatsApp: +51 924 996 961<br>Lima - Perú</p></div>
-            <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Legal</h5><p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 Alex Store - Todos los derechos reservados.</p></div>
+            <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Legal</h5><p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 M & A Home & Style - Todos los derechos reservados.</p></div>
         </div>
     </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[120] hidden">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg w-96 max-w-sm mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Iniciar Sesión / Registrarse</h2>
+                <button onclick="closeLoginModal()" class="text-gray-500 text-2xl">&times;</button>
+            </div>
+            <div class="flex mb-4">
+                <button onclick="showTab('login')" id="login-btn" class="flex-1 py-2 bg-gold text-black font-bold">Iniciar Sesión</button>
+                <button onclick="showTab('register')" id="register-btn" class="flex-1 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300">Registrarse</button>
+            </div>
+            <div id="login-tab">
+                <form onsubmit="login(event)" data-netlify="true" method="post" name="login-form">
+                    <input type="hidden" name="form-name" value="login-form" />
+                    <input type="email" id="login-email" name="email" placeholder="Email" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
+                    <input type="password" id="login-password" name="password" placeholder="Contraseña" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
+                    <button type="submit" class="w-full bg-gold text-black p-3 rounded font-bold mb-3">Iniciar Sesión</button>
+                </form>
+                <div class="text-center mb-3">O</div>
+                <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white p-3 rounded font-bold mb-2 flex items-center justify-center">
+                    <i data-lucide="chrome" class="w-5 h-5 mr-2"></i> Iniciar con Google
+                </button>
+                <button onclick="signInWithFacebook()" class="w-full bg-blue-600 text-white p-3 rounded font-bold flex items-center justify-center">
+                    <i data-lucide="facebook" class="w-5 h-5 mr-2"></i> Iniciar con Facebook
+                </button>
+            </div>
+            <div id="register-tab" class="hidden">
+                <form onsubmit="register(event)" data-netlify="true" method="post" name="register-form">
+                    <input type="hidden" name="form-name" value="register-form" />
+                    <input type="text" id="reg-name" name="name" placeholder="Nombre" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
+                    <input type="email" id="reg-email" name="email" placeholder="Email" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
+                    <input type="password" id="reg-password" name="password" placeholder="Contraseña" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
+                    <button type="submit" class="w-full bg-gold text-black p-3 rounded font-bold mb-3">Registrarse</button>
+                </form>
+                <div class="text-center mb-3">O</div>
+                <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white p-3 rounded font-bold mb-2 flex items-center justify-center">
+                    <i data-lucide="chrome" class="w-5 h-5 mr-2"></i> Registrarse con Google
+                </button>
+                <button onclick="signInWithFacebook()" class="w-full bg-blue-600 text-white p-3 rounded font-bold flex items-center justify-center">
+                    <i data-lucide="facebook" class="w-5 h-5 mr-2"></i> Registrarse con Facebook
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

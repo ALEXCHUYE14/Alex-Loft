@@ -1,27 +1,36 @@
 
-        // BASE DE DATOS EXPANDIDA (35 PRODUCTOS)
+        // BASE DE DATOS EXPANDIDA (35 PRODUCTOS) - Hogar + Moda
         const products = [
-            { id: 1, name: "Jordan 4 Retro Military Blue", price: 899, category: "Zapatillas", img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=800" },
-            { id: 2, name: "Nike Dunk Low Panda", price: 549, category: "Zapatillas", img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=800" },
-            { id: 3, name: "Adidas Forum Bad Bunny", price: 750, category: "Zapatillas", img: "https://images.unsplash.com/photo-1551107644-793510986938?q=80&w=800" },
-            { id: 4, name: "Nike Air Force 1 White", price: 480, category: "Zapatillas", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800" },
-            { id: 5, name: "Yeezy Boost 350 V2", price: 1150, category: "Zapatillas", img: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?q=80&w=800" },
-            { id: 6, name: "New Balance 550", price: 590, category: "Zapatillas", img: "https://images.unsplash.com/photo-1628413993904-94ecb60f1239?q=80&w=800" },
-            { id: 7, name: "Hoodie Alex Oversize Black", price: 195, category: "Hombre", img: "https://images.unsplash.com/photo-1556316301-d83e540ca39a?q=80&w=800" },
-            { id: 8, name: "Polo Street Soul", price: 95, category: "Hombre", img: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800" },
-            { id: 9, name: "Conjunto Woman Urban", price: 290, category: "Mujer", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800" },
-            { id: 10, name: "Gorra NY Gold Edition", price: 110, category: "Accesorios", img: "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=800" },
-            { id: 11, name: "Gorra NY Gold Edition", price: 110, category: "Accesorios", img: "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=800" }
+          { id: 1, name: "Lámpara Moderna de Mesa", price: 299, category: "Decoración", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800" },
+          { id: 2, name: "Sofá Minimalista Gris", price: 1599, category: "Sala", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800" },
+          { id: 3, name: "Juego de Ollas Antiadherentes", price: 450, category: "Cocina", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=800" },
+          { id: 4, name: "Cama King Size con Cabecero", price: 899, category: "Dormitorio", img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800" },
+          { id: 5, name: "Espejo Decorativo Dorado", price: 199, category: "Decoración", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800" },
+          { id: 6, name: "Mesa de Centro de Madera", price: 350, category: "Sala", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800" },
+          { id: 7, name: "Batidora de Mano Profesional", price: 150, category: "Cocina", img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800" },
+          { id: 8, name: "Cómoda de 6 Cajones", price: 650, category: "Dormitorio", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800" },
+          { id: 9, name: "Alfombra Persa Moderna", price: 280, category: "Decoración", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800" },
+          { id: 10, name: "Silla Ergonómica de Oficina", price: 320, category: "Sala", img: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=800" },
+          { id: 11, name: "Set de Vajilla para 6", price: 180, category: "Cocina", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=800" },
+          // Moda: polos, camisas, pantalones, zapatillas
+          { id: 12, name: "Polo Básico Premium", price: 89, category: "Moda", img: "https://images.unsplash.com/photo-1520975698518-6b0b6f6b4aaf?q=80&w=800" },
+          { id: 13, name: "Camisa Oxford Blanca", price: 129, category: "Moda", img: "https://images.unsplash.com/photo-1520975698518-6b0b6f6b4aaf?q=80&w=800" },
+          { id: 14, name: "Camisa Columbia Outdoor", price: 159, category: "Moda", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800" },
+          { id: 15, name: "Pantalón Chino Slim", price: 139, category: "Moda", img: "https://images.unsplash.com/photo-1530845648478-0b2f6b3d4a2f?q=80&w=800" },
+          { id: 16, name: "Jeans Clásicos Oscuros", price: 149, category: "Moda", img: "https://images.unsplash.com/photo-1520975911208-9a8c0f3f3c0b?q=80&w=800" },
+          { id: 17, name: "Zapatillas Urbanas Neo", price: 499, category: "Zapatillas", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800" },
+          { id: 18, name: "Sneakers Classic White", price: 419, category: "Zapatillas", img: "https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=800" },
+          { id: 19, name: "Zapatillas Trail Columbia", price: 539, category: "Zapatillas", img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=800" }
         ];
         // Autocompletar a 35 para la demo
         while(products.length < 35) {
             const p = products[Math.floor(Math.random()*products.length)];
-            products.push({...p, id: products.length + 1, name: p.name + " Elite " + products.length});
+            products.push({...p, id: products.length + 1, name: p.name + " Premium " + products.length});
         }
 
         const reviews = [
-            { name: "Carlos P.", text: "La atención por WhatsApp es increíble. Mis Jordan llegaron en 24h a Piura." },
-            { name: "Milagros S.", text: "Calidad top. Compré un conjunto y la tela es muy premium. Recomendado." },
+            { name: "Carlos P.", text: "La atención por WhatsApp es increíble. Mi sofá llegó en 24h a Piura." },
+            { name: "Milagros S.", text: "Calidad top. Compré una lámpara y el diseño es muy moderno. Recomendado." },
             { name: "Jorge R.", text: "Confiables al 100%. Pagué por Interbank y todo el proceso fue transparente." }
         ];
 
@@ -64,6 +73,17 @@
             document.getElementById('cat-title').innerText = cat;
             renderGrid(filtered);
             showView('home-view');
+        }
+                                                                                                                                                                                                                                                                                                                                                                                    
+        // Filtrado por grupos: 'home' -> decoración y habitaciones; 'style' -> moda y zapatillas
+        function filterByGroup(group) {
+          let cats = [];
+          if (group === 'home') cats = ['Decoración', 'Sala', 'Cocina', 'Dormitorio'];
+          else if (group === 'style') cats = ['Moda', 'Zapatillas'];
+          const filtered = products.filter(p => cats.includes(p.category));
+          document.getElementById('cat-title').innerText = group === 'home' ? 'Hogar' : 'Style';
+          renderGrid(filtered);
+          showView('home-view');
         }
 
         function renderGrid(data) {
@@ -124,11 +144,11 @@
             selColor = ''; selSize = '';
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
 
-            const hasSize = ["Zapatillas", "Hombre", "Mujer"].includes(p.category);
+            const hasSize = [].includes(p.category); // No sizes for home items
             const sizeSec = document.getElementById('size-section');
             if(hasSize) {
                 sizeSec.classList.remove('hidden');
-                const t = p.category === "Zapatillas" ? [38, 39, 40, 41, 42, 43] : ["S", "M", "L", "XL"];
+                const t = []; // No sizes
                 document.getElementById('size-grid').innerHTML = t.map(val => `
                     <button onclick="setSize('${val}', this)" class="border dark:border-slate-700 py-4 text-[10px] font-black rounded-xl transition hover:bg-black hover:text-white dark:hover:bg-gold dark:hover:text-black">${val}</button>
                 `).join('');
@@ -186,7 +206,7 @@
         function removeFromCart(uid) { cart = cart.filter(i => i.uid !== uid); updateCartUI(); }
 
         function sendOrder(method) {
-            let msg = `*ALEX STORE - NUEVO PEDIDO*\n--------------------------\n*Pago:* ${method}\n\n`;
+            let msg = `*M & A HOME & STYLE - NUEVO PEDIDO*\n--------------------------\n*Pago:* ${method}\n\n`;
             cart.forEach(i => msg += `📦 *${i.name}*\nTalla: ${i.size} | Color: ${i.color} | Cant: ${i.qty}\nSub: S/ ${(i.price*i.qty).toFixed(2)}\n\n`);
             msg += `*TOTAL A PAGAR: ${document.getElementById('total-price').innerText}*\n--------------------------\n`;
             if(method === 'INTERBANK') msg += `_Solicito validar pago a Cuenta Interbank: 003-773-013259712394-93_`;
@@ -199,14 +219,214 @@
         let slideIdx = 0;
         const slides = document.querySelectorAll('.slide');
         setInterval(() => {
-            slides[slideIdx].classList.remove('active');
-            slideIdx = (slideIdx + 1) % slides.length;
-            slides[slideIdx].classList.add('active');
-        }, 4000);
+          if (!slides.length) return;
+          slides[slideIdx].classList.remove('active');
+          slideIdx = (slideIdx + 1) % slides.length;
+          slides[slideIdx].classList.add('active');
+        }, 3000);
+
+        // Colecciones destacadas: renderizar bloques Home y Style
+        function renderCollections() {
+          const homeCats = ['Decoración', 'Sala', 'Cocina', 'Dormitorio'];
+          const styleCats = ['Moda', 'Zapatillas'];
+
+          const homeItems = products.filter(p => homeCats.includes(p.category)).slice(0,8);
+          const styleItems = products.filter(p => styleCats.includes(p.category)).slice(0,8);
+
+          const homeContainer = document.getElementById('coleccion-home');
+          const styleContainer = document.getElementById('coleccion-style');
+
+          if (homeContainer) {
+            homeContainer.innerHTML = homeItems.map(p => `
+              <div onclick="openPDP(${p.id})" class="group cursor-pointer">
+                <div class="aspect-[3/4] rounded-[1.25rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-3 relative">
+                  <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                </div>
+                <h5 class="text-[10px] font-black uppercase italic truncate">${p.name}</h5>
+                <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
+              </div>
+            `).join('');
+          }
+
+          if (styleContainer) {
+            styleContainer.innerHTML = styleItems.map(p => `
+              <div onclick="openPDP(${p.id})" class="group cursor-pointer">
+                <div class="aspect-[3/4] rounded-[1.25rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-3 relative">
+                  <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                </div>
+                <h5 class="text-[10px] font-black uppercase italic truncate">${p.name}</h5>
+                <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
+              </div>
+            `).join('');
+          }
+          lucide.createIcons();
+        }
+
+        function filterCollection(group, subcat) {
+          let cats = [];
+          if (group === 'home') cats = [subcat];
+          else if (group === 'style') cats = [subcat];
+
+          const filtered = products.filter(p => cats.includes(p.category) || (group === 'style' && subcat === 'Moda' && p.category === 'Moda'));
+          const containerId = group === 'home' ? 'coleccion-home' : 'coleccion-style';
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          container.innerHTML = filtered.slice(0,8).map(p => `
+            <div onclick="openPDP(${p.id})" class="group cursor-pointer">
+              <div class="aspect-[3/4] rounded-[1.25rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-3 relative">
+                <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+              </div>
+              <h5 class="text-[10px] font-black uppercase italic truncate">${p.name}</h5>
+              <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
+            </div>
+          `).join('');
+          lucide.createIcons();
+        }
 
         // INIT
         renderGrid(products);
+        renderCollections();
         renderReviews();
         updateCartUI();
         lucide.createIcons();
+    
+// Login/Register functions with Firebase
+function showLoginModal() {
+  document.getElementById('login-modal').classList.remove('hidden');
+}
+
+function closeLoginModal() {
+  document.getElementById('login-modal').classList.add('hidden');
+}
+
+function showTab(tab) {
+  document.getElementById('login-tab').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('register-tab').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('login-btn').classList.toggle('bg-gold', tab === 'login');
+  document.getElementById('login-btn').classList.toggle('text-black', tab === 'login');
+  document.getElementById('register-btn').classList.toggle('bg-gold', tab === 'register');
+  document.getElementById('register-btn').classList.toggle('text-black', tab === 'register');
+}
+
+async function register(event) {
+  event.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  try {
+    const userCredential = await window.createUserWithEmailAndPassword(window.auth, email, password);
+    const user = userCredential.user;
+    await window.setDoc(window.doc(window.db, 'users', user.uid), {
+      name: name,
+      email: email,
+      notifications: true
+    });
+    document.cookie = "user=" + email + "; path=/; max-age=86400";
+    alert('Registrado exitosamente. Ahora puedes recibir notificaciones.');
+    requestNotificationPermission();
+    closeLoginModal();
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
+async function login(event) {
+  event.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  try {
+    await window.signInWithEmailAndPassword(window.auth, email, password);
+    document.cookie = "user=" + email + "; path=/; max-age=86400";
+    alert('Iniciado sesión. Ahora puedes recibir notificaciones.');
+    requestNotificationPermission();
+    closeLoginModal();
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
+async function signInWithGoogle() {
+  const provider = new window.GoogleAuthProvider();
+  try {
+    const result = await window.signInWithPopup(window.auth, provider);
+    const user = result.user;
+    await window.setDoc(window.doc(window.db, 'users', user.uid), {
+      name: user.displayName,
+      email: user.email,
+      notifications: true
+    }, { merge: true });
+    document.cookie = "user=" + user.email + "; path=/; max-age=86400";
+    alert('Iniciado con Google. Ahora puedes recibir notificaciones.');
+    requestNotificationPermission();
+    closeLoginModal();
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
+async function signInWithFacebook() {
+  const provider = new window.FacebookAuthProvider();
+  try {
+    const result = await window.signInWithPopup(window.auth, provider);
+    const user = result.user;
+    await window.setDoc(window.doc(window.db, 'users', user.uid), {
+      name: user.displayName,
+      email: user.email,
+      notifications: true
+    }, { merge: true });
+    document.cookie = "user=" + user.email + "; path=/; max-age=86400";
+    alert('Iniciado con Facebook. Ahora puedes recibir notificaciones.');
+    requestNotificationPermission();
+    closeLoginModal();
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
+async function requestNotificationPermission() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const token = await window.getToken(window.messaging, { vapidKey: 'YOUR_VAPID_KEY' });
+      const user = window.auth.currentUser;
+      if (user) {
+        await window.setDoc(window.doc(window.db, 'users', user.uid), {
+          fcmToken: token
+        }, { merge: true });
+      }
+      console.log('FCM Token:', token);
+    }
+  } catch (error) {
+    console.error('Error getting token:', error);
+  }
+}
+
+// Auth state listener
+window.onAuthStateChanged(window.auth, (user) => {
+  if (user) {
+    console.log('User signed in:', user.email);
+    const userBtn = document.querySelector('button[onclick="showLoginModal()"]');
+    userBtn.innerHTML = '<i data-lucide="log-out" class="w-6 h-6"></i>';
+    userBtn.onclick = () => {
+      window.signOut(window.auth);
+      document.cookie = "user=; path=/; max-age=0";
+      alert('Sesión cerrada');
+    };
+  } else {
+    console.log('User signed out');
+    const userBtn = document.querySelector('button[onclick="showLoginModal()"]');
+    userBtn.innerHTML = '<i data-lucide="user" class="w-6 h-6"></i>';
+    userBtn.onclick = showLoginModal;
+  }
+  lucide.createIcons();
+});
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registered'))
+      .catch(err => console.log('Service Worker registration failed:', err));
+  });
+}
     
