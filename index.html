@@ -152,8 +152,9 @@
         </div>
         <div class="space-y-6">
             <div class="relative">
-                <input type="text" onkeyup="searchProducts(this.value)" placeholder="Buscar..." class="w-full bg-gray-100 dark:bg-slate-800 p-3 pl-10 rounded-xl text-xs outline-none">
+                <input type="text" id="mobile-search-input" onkeyup="mobileSearch(event, this.value)" placeholder="Buscar producto..." class="w-full bg-gray-100 dark:bg-slate-800 p-3 pl-10 pr-16 rounded-xl text-xs outline-none border border-transparent focus:border-gold">
                 <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+                <button onclick="doMobileSearch()" class="absolute right-2 top-1.5 bg-gold text-black text-[9px] font-black px-2 py-1.5 rounded-lg uppercase">Buscar</button>
             </div>
             <div class="flex flex-col gap-4 font-black uppercase text-xs tracking-widest">
                 <button onclick="filterBy('Decoración'); toggleMobileMenu()" class="text-left py-2 border-b dark:border-slate-800">Decoración</button>
@@ -165,6 +166,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-top-btn" onclick="scrollToTop()" title="Volver arriba">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </button>
+
+    <!-- Overlay (cierra carrito/menú al hacer click fuera) -->
+    <div id="overlay" onclick="closeAllDrawers()"></div>
 
     <a href="https://wa.me/51924996961?text=Hola%20M%20%26%20A%20Home%20%26%20Style,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp">
         <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
@@ -295,8 +307,10 @@
                     </div>
 
                     <div id="size-section" class="mb-10">
-                        <p class="text-[10px] font-black uppercase mb-4 tracking-widest">Talla Disponible:</p>
-                        <div id="size-grid" class="grid grid-cols-4 gap-2"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-[10px] font-black uppercase tracking-widest"><span id="size-label-text">Talla Disponible: </span><span id="selected-size-label" class="text-gold"></span></p>
+                        </div>
+                        <div id="size-grid" class="grid gap-2"></div>
                     </div>
 
                     <div class="flex gap-4 pt-6">
@@ -365,51 +379,6 @@
             <div><h5 class="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-gold">Legal</h5><p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 M & A Home & Style - Todos los derechos reservados.</p></div>
         </div>
     </footer>
-
-    <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[120] hidden">
-        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg w-96 max-w-sm mx-4">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Iniciar Sesión / Registrarse</h2>
-                <button onclick="closeLoginModal()" class="text-gray-500 text-2xl">&times;</button>
-            </div>
-            <div class="flex mb-4">
-                <button onclick="showTab('login')" id="login-btn" class="flex-1 py-2 bg-gold text-black font-bold">Iniciar Sesión</button>
-                <button onclick="showTab('register')" id="register-btn" class="flex-1 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300">Registrarse</button>
-            </div>
-            <div id="login-tab">
-                <form onsubmit="login(event)" data-netlify="true" method="post" name="login-form">
-                    <input type="hidden" name="form-name" value="login-form" />
-                    <input type="email" id="login-email" name="email" placeholder="Email" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
-                    <input type="password" id="login-password" name="password" placeholder="Contraseña" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
-                    <button type="submit" class="w-full bg-gold text-black p-3 rounded font-bold mb-3">Iniciar Sesión</button>
-                </form>
-                <div class="text-center mb-3">O</div>
-                <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white p-3 rounded font-bold mb-2 flex items-center justify-center">
-                    <i data-lucide="chrome" class="w-5 h-5 mr-2"></i> Iniciar con Google
-                </button>
-                <button onclick="signInWithFacebook()" class="w-full bg-blue-600 text-white p-3 rounded font-bold flex items-center justify-center">
-                    <i data-lucide="facebook" class="w-5 h-5 mr-2"></i> Iniciar con Facebook
-                </button>
-            </div>
-            <div id="register-tab" class="hidden">
-                <form onsubmit="register(event)" data-netlify="true" method="post" name="register-form">
-                    <input type="hidden" name="form-name" value="register-form" />
-                    <input type="text" id="reg-name" name="name" placeholder="Nombre" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
-                    <input type="email" id="reg-email" name="email" placeholder="Email" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
-                    <input type="password" id="reg-password" name="password" placeholder="Contraseña" required class="w-full p-3 mb-3 border rounded dark:bg-slate-700 dark:border-slate-600">
-                    <button type="submit" class="w-full bg-gold text-black p-3 rounded font-bold mb-3">Registrarse</button>
-                </form>
-                <div class="text-center mb-3">O</div>
-                <button onclick="signInWithGoogle()" class="w-full bg-red-500 text-white p-3 rounded font-bold mb-2 flex items-center justify-center">
-                    <i data-lucide="chrome" class="w-5 h-5 mr-2"></i> Registrarse con Google
-                </button>
-                <button onclick="signInWithFacebook()" class="w-full bg-blue-600 text-white p-3 rounded font-bold flex items-center justify-center">
-                    <i data-lucide="facebook" class="w-5 h-5 mr-2"></i> Registrarse con Facebook
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>

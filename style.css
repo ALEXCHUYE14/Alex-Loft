@@ -8,6 +8,9 @@
         .slide.active { opacity: 1; }
         .drawer { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .color-dot.selected::after { content: '✓'; color: white; font-weight: bold; }
+        .size-btn.selected { background-color: #000; color: #fff; border-color: #000; }
+        html.dark .size-btn.selected { background-color: #D4AF37; color: #000; border-color: #D4AF37; }
+        #size-grid { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
         .testimonial-track { display: flex; transition: transform 0.5s ease-in-out; }
         .testimonial-card { min-width: 100%; }
         
@@ -26,4 +29,57 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
- @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+        @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        #toast-container { position: fixed; top: 90px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast {
+            background: #111; color: #fff; padding: 14px 20px; border-radius: 14px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            transform: translateX(120%); opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+            pointer-events: auto; min-width: 220px; max-width: 320px;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.toast-success { border-left: 4px solid #22c55e; }
+        .toast.toast-error   { border-left: 4px solid #ef4444; }
+        .toast.toast-info    { border-left: 4px solid #D4AF37; }
+        html.dark .toast { background: #1e293b; }
+
+        /* ===== SKELETON LOADING ===== */
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 1.5rem; }
+        html.dark .skeleton { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 200% 100%; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* ===== PRODUCT CARD ANIMATIONS ===== */
+        .product-card { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .product-card.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== WISHLIST BUTTON ===== */
+        .wishlist-btn { position: absolute; top: 12px; right: 12px; z-index: 10; background: rgba(255,255,255,0.9); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, background 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .wishlist-btn:hover { transform: scale(1.15); }
+        .wishlist-btn.active { background: #ef4444; }
+        .wishlist-btn.active svg { stroke: white; fill: white; }
+        html.dark .wishlist-btn { background: rgba(30,41,59,0.9); }
+
+        /* ===== PRODUCT BADGE ===== */
+        .product-badge { position: absolute; top: 12px; left: 12px; z-index: 10; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 999px; }
+        .badge-new  { background: #D4AF37; color: #000; }
+        .badge-sale { background: #ef4444; color: #fff; }
+
+        /* ===== SCROLL TO TOP ===== */
+        #scroll-top-btn { position: fixed; bottom: 100px; right: 24px; z-index: 149; background: #000; color: #fff; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
+        #scroll-top-btn.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        html.dark #scroll-top-btn { background: #D4AF37; color: #000; }
+
+        /* ===== OVERLAY ===== */
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        #overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* ===== SIZE GUIDE TOOLTIP ===== */
+        .size-guide-link { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #D4AF37; cursor: pointer; text-decoration: underline; }
+
+        /* ===== SELECTED SIZE INDICATOR ===== */
+        #selected-size-label { font-size: 10px; font-weight: 900; color: #D4AF37; }

@@ -56,16 +56,51 @@
             window.scrollTo(0,0);
         }
 
-        function toggleCart() { document.getElementById('cart-drawer').classList.toggle('translate-x-full'); }
-        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('-translate-x-full'); }
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const isOpen = !drawer.classList.contains('translate-x-full');
+            drawer.classList.toggle('translate-x-full');
+            if (typeof showOverlay === 'function') { isOpen ? hideOverlay() : showOverlay(); }
+        }
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const isOpen = !menu.classList.contains('-translate-x-full');
+            menu.classList.toggle('-translate-x-full');
+            if (typeof showOverlay === 'function') { isOpen ? hideOverlay() : showOverlay(); }
+        }
         function openPaymentModal() { if(cart.length > 0) document.getElementById('payment-modal').classList.replace('hidden', 'flex'); }
         function closePaymentModal() { document.getElementById('payment-modal').classList.replace('flex', 'hidden'); }
 
         // BUSQUEDA Y FILTROS
         function searchProducts(query) {
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            const q = query.toLowerCase().trim();
+            if (!q) { renderGrid(products); document.getElementById('cat-title').innerText = 'Explora la tienda'; showView('home-view'); return; }
+            const filtered = products.filter(p =>
+                p.name.toLowerCase().includes(q) ||
+                p.category.toLowerCase().includes(q)
+            );
+            const count = filtered.length;
+            document.getElementById('cat-title').innerText = `${count} resultado${count !== 1 ? 's' : ''} para "${query}"`;
             renderGrid(filtered);
             showView('home-view');
+        }
+
+        // Búsqueda desde menú hamburguesa: cierra el menú al presionar Enter
+        function mobileSearch(event, value) {
+            if (event.key === 'Enter') {
+                doMobileSearch();
+            }
+        }
+
+        function doMobileSearch() {
+            const input = document.getElementById('mobile-search-input');
+            const query = input ? input.value : '';
+            searchProducts(query);
+            // Cerrar el menú móvil para mostrar los resultados
+            const menu = document.getElementById('mobile-menu');
+            if (menu && !menu.classList.contains('-translate-x-full')) {
+                menu.classList.add('-translate-x-full');
+            }
         }
 
         function filterBy(cat) {
@@ -123,12 +158,12 @@
         function addReview() {
             const name = document.getElementById('rev-name').value;
             const text = document.getElementById('rev-text').value;
-            if(!name || !text) return;
+            if(!name || !text) { showToast('Por favor completa tu nombre y comentario', 'error'); return; }
             reviews.unshift({ name, text });
             renderReviews();
             document.getElementById('rev-name').value = '';
             document.getElementById('rev-text').value = '';
-            alert("¡Gracias por compartir tu experiencia!");
+            showToast('¡Gracias por compartir tu experiencia! ⭐', 'success');
         }
 
         // PRODUCT DETAIL (PDP)
@@ -143,23 +178,38 @@
             pdpQty = 1; document.getElementById('pdp-qty').innerText = 1;
             selColor = ''; selSize = '';
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+            const sizeLabel = document.getElementById('selected-size-label');
+            if (sizeLabel) sizeLabel.innerText = '';
 
-            const hasSize = [].includes(p.category); // No sizes for home items
             const sizeSec = document.getElementById('size-section');
-            if(hasSize) {
+            let sizes = [];
+
+            if (p.category === 'Zapatillas') {
+                sizes = [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+                document.getElementById('size-label-text').innerText = 'Talla de Zapatilla: ';
+            } else if (p.category === 'Moda') {
+                sizes = ['S', 'M', 'L', 'XL'];
+                document.getElementById('size-label-text').innerText = 'Talla de Ropa: ';
+            }
+
+            if (sizes.length > 0) {
                 sizeSec.classList.remove('hidden');
-                const t = []; // No sizes
-                document.getElementById('size-grid').innerHTML = t.map(val => `
-                    <button onclick="setSize('${val}', this)" class="border dark:border-slate-700 py-4 text-[10px] font-black rounded-xl transition hover:bg-black hover:text-white dark:hover:bg-gold dark:hover:text-black">${val}</button>
+                document.getElementById('size-grid').innerHTML = sizes.map(val => `
+                    <button onclick="setSize('${val}', this)" class="size-btn border dark:border-slate-700 py-3 text-[11px] font-black rounded-xl transition hover:bg-black hover:text-white dark:hover:bg-gold dark:hover:text-black">${val}</button>
                 `).join('');
-            } else { sizeSec.classList.add('hidden'); selSize = 'N/A'; }
+            } else {
+                sizeSec.classList.add('hidden');
+                selSize = 'N/A';
+            }
             showView('detail-view');
         }
 
         function setSize(s, el) {
             selSize = s;
-            document.querySelectorAll('#size-grid button').forEach(b => b.classList.remove('bg-black', 'text-white', 'dark:bg-gold', 'dark:text-black'));
-            el.classList.add('bg-black', 'text-white', 'dark:bg-gold', 'dark:text-black');
+            document.querySelectorAll('#size-grid button').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            const label = document.getElementById('selected-size-label');
+            if (label) label.innerText = s;
         }
 
         function setCol(c, el) {
@@ -172,11 +222,14 @@
 
         // CARRITO Y WHATSAPP
         function addToCart() {
-            if(!selColor || !selSize) return alert("Selecciona color y talla para continuar.");
+            if(!selColor) { showToast('Selecciona un color para continuar', 'error'); return; }
+            if(!selSize)  { showToast('Selecciona una talla para continuar', 'error'); return; }
             const existing = cart.find(i => i.id === currentPDP.id && i.color === selColor && i.size === selSize);
             if(existing) existing.qty += pdpQty;
             else cart.push({ ...currentPDP, color: selColor, size: selSize, qty: pdpQty, uid: Date.now() });
-            updateCartUI(); toggleCart();
+            updateCartUI();
+            toggleCart();
+            showToast(`${currentPDP.name} añadido al carrito 🛍`, 'success');
         }
 
         function updateCartUI() {
@@ -283,12 +336,118 @@
           lucide.createIcons();
         }
 
-        // INIT
+        // ===== TOAST NOTIFICATIONS =====
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const icons = { success: '✓', error: '✕', info: '★' };
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span style="font-size:14px;margin-right:6px">${icons[type]||'★'}</span>${message}`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => { requestAnimationFrame(() => toast.classList.add('show')); });
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
+
+        // ===== WISHLIST =====
+        let wishlist = JSON.parse(localStorage.getItem('alex_wishlist')) || [];
+
+        function toggleWishlist(id, event) {
+            event.stopPropagation();
+            const idx = wishlist.indexOf(id);
+            if (idx === -1) {
+                wishlist.push(id);
+                showToast('Añadido a favoritos ❤', 'success');
+            } else {
+                wishlist.splice(idx, 1);
+                showToast('Eliminado de favoritos', 'info');
+            }
+            localStorage.setItem('alex_wishlist', JSON.stringify(wishlist));
+            // Update all wishlist buttons for this product
+            document.querySelectorAll(`.wishlist-btn[data-id="${id}"]`).forEach(btn => {
+                btn.classList.toggle('active', wishlist.includes(id));
+            });
+        }
+
+        // ===== BADGE LOGIC =====
+        const newProductIds = [12, 13, 17, 18, 19]; // IDs marcados como "Nuevo"
+        const saleProductIds = [15, 16, 3, 7];       // IDs marcados como "Oferta"
+
+        function getBadgeHTML(id) {
+            if (newProductIds.includes(id)) return `<span class="product-badge badge-new">Nuevo</span>`;
+            if (saleProductIds.includes(id)) return `<span class="product-badge badge-sale">Oferta</span>`;
+            return '';
+        }
+
+        // ===== ENHANCED RENDER GRID (with wishlist + badges + animations) =====
+        function renderGrid(data) {
+            const grid = document.getElementById('grid-container');
+            if (!data.length) {
+                grid.innerHTML = `<div class="col-span-4 text-center py-20 opacity-40">
+                    <p class="text-4xl mb-4">🔍</p>
+                    <p class="font-black uppercase text-sm">Sin resultados</p>
+                    <p class="text-xs mt-2">Intenta con otro término de búsqueda</p>
+                </div>`;
+                return;
+            }
+            grid.innerHTML = data.map(p => `
+                <div onclick="openPDP(${p.id})" class="product-card group cursor-pointer">
+                    <div class="aspect-[3/4] rounded-[2rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-4 relative">
+                        <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" loading="lazy">
+                        ${getBadgeHTML(p.id)}
+                        <button class="wishlist-btn ${wishlist.includes(p.id) ? 'active' : ''}" data-id="${p.id}" onclick="toggleWishlist(${p.id}, event)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${wishlist.includes(p.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                    </div>
+                    <h4 class="text-[10px] font-black uppercase italic truncate">${p.name}</h4>
+                    <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
+                </div>
+            `).join('');
+            lucide.createIcons();
+            // Trigger card animations
+            requestAnimationFrame(() => observeCards());
+        }
+
+        // ===== INTERSECTION OBSERVER for card animations =====
+        function observeCards() {
+            const cards = document.querySelectorAll('.product-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            cards.forEach(card => observer.observe(card));
+        }
+
+        // ===== SCROLL TO TOP =====
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top-btn');
+            if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        // ===== OVERLAY (close drawers on outside click) =====
+        function showOverlay() { document.getElementById('overlay').classList.add('active'); }
+        function hideOverlay() { document.getElementById('overlay').classList.remove('active'); }
+        function closeAllDrawers() {
+            document.getElementById('cart-drawer').classList.add('translate-x-full');
+            document.getElementById('mobile-menu').classList.add('-translate-x-full');
+            hideOverlay();
+        }
+
+        // ===== INIT
         renderGrid(products);
         renderCollections();
         renderReviews();
         updateCartUI();
         lucide.createIcons();
+        setTimeout(() => observeCards(), 100);
     
 // Login/Register functions with Firebase
 function showLoginModal() {
