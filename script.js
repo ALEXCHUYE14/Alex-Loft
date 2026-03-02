@@ -121,20 +121,6 @@
           showView('home-view');
         }
 
-        function renderGrid(data) {
-            const grid = document.getElementById('grid-container');
-            grid.innerHTML = data.map(p => `
-                <div onclick="openPDP(${p.id})" class="group cursor-pointer">
-                    <div class="aspect-[3/4] rounded-[2rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-4 relative">
-                        <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                    </div>
-                    <h4 class="text-[10px] font-black uppercase italic truncate">${p.name}</h4>
-                    <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
         // REVIEWS & CAROUSEL
         function renderReviews() {
             const track = document.getElementById('testimonial-track');
@@ -259,13 +245,63 @@
         function removeFromCart(uid) { cart = cart.filter(i => i.uid !== uid); updateCartUI(); }
 
         function sendOrder(method) {
-            let msg = `*M & A HOME & STYLE - NUEVO PEDIDO*\n--------------------------\n*Pago:* ${method}\n\n`;
+            const orderNum = generateOrderNumber();
+            const total = document.getElementById('total-price').innerText;
+            
+            // Show order confirmation modal
+            closePaymentModal();
+            toggleCart();
+            showOrderConfirmation(orderNum, method, total);
+            
+            // Build WhatsApp message
+            let msg = `*M & A HOME & STYLE - NUEVO PEDIDO*\n--------------------------\n*Pedido:* ${orderNum}\n*Pago:* ${method}\n\n`;
             cart.forEach(i => msg += `📦 *${i.name}*\nTalla: ${i.size} | Color: ${i.color} | Cant: ${i.qty}\nSub: S/ ${(i.price*i.qty).toFixed(2)}\n\n`);
-            msg += `*TOTAL A PAGAR: ${document.getElementById('total-price').innerText}*\n--------------------------\n`;
+            msg += `*TOTAL A PAGAR: ${total}*\n--------------------------\n`;
             if(method === 'INTERBANK') msg += `_Solicito validar pago a Cuenta Interbank: 003-773-013259712394-93_`;
             else msg += `_Solicito código QR para pago por Yape/Plin_`;
             
-            window.open(`https://wa.me/51924996961?text=${encodeURIComponent(msg)}`);
+            // Store for later WhatsApp share
+            window._lastOrderMsg = msg;
+            window._lastOrderNum = orderNum;
+        }
+
+        function generateOrderNumber() {
+            const ts = Date.now().toString().slice(-6);
+            const rand = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+            return `#MA-${ts}${rand}`;
+        }
+
+        function showOrderConfirmation(orderNum, method, total) {
+            const modal = document.getElementById('order-confirmation-modal');
+            document.getElementById('order-number').innerText = orderNum;
+            document.getElementById('order-method').innerText = method === 'YAPE' ? '📱 Yape / Plin' : '🏦 Interbank';
+            document.getElementById('order-total').innerText = total;
+            document.getElementById('order-email').innerText = 'pedidos@mandahomestyle.com';
+            
+            // Order summary items
+            const summaryEl = document.getElementById('order-summary-items');
+            summaryEl.innerHTML = cart.map(i => `
+                <div class="flex justify-between items-center text-xs py-1">
+                    <span class="font-bold truncate max-w-[200px]">${i.name} <span class="text-gray-400">(x${i.qty})</span></span>
+                    <span class="font-black text-gold ml-2">S/ ${(i.price * i.qty).toFixed(2)}</span>
+                </div>
+            `).join('');
+            
+            modal.classList.replace('hidden', 'flex');
+            
+            // Clear cart after order
+            cart = [];
+            updateCartUI();
+        }
+
+        function closeOrderConfirmation() {
+            document.getElementById('order-confirmation-modal').classList.replace('flex', 'hidden');
+        }
+
+        function shareOrderWhatsApp() {
+            if (window._lastOrderMsg) {
+                window.open(`https://wa.me/51924996961?text=${encodeURIComponent(window._lastOrderMsg)}`);
+            }
         }
 
         // HERO SLIDER
@@ -386,11 +422,13 @@
         function renderGrid(data) {
             const grid = document.getElementById('grid-container');
             if (!data.length) {
-                grid.innerHTML = `<div class="col-span-4 text-center py-20 opacity-40">
+                grid.innerHTML = `<div class="col-span-6 text-center py-20 opacity-40">
                     <p class="text-4xl mb-4">🔍</p>
                     <p class="font-black uppercase text-sm">Sin resultados</p>
                     <p class="text-xs mt-2">Intenta con otro término de búsqueda</p>
                 </div>`;
+                // Also update mobile carousel
+                renderMobileCarousel(data);
                 return;
             }
             grid.innerHTML = data.map(p => `
@@ -407,6 +445,8 @@
                 </div>
             `).join('');
             lucide.createIcons();
+            // Also update mobile carousel
+            renderMobileCarousel(data);
             // Trigger card animations
             requestAnimationFrame(() => observeCards());
         }
@@ -441,11 +481,196 @@
             hideOverlay();
         }
 
+        // ===== COOKIE CONSENT =====
+        function initCookieBanner() {
+            const consent = localStorage.getItem('cookie_consent');
+            if (!consent) {
+                setTimeout(() => {
+                    const banner = document.getElementById('cookie-banner');
+                    if (banner) banner.classList.add('show');
+                }, 1800);
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookie_consent', 'all');
+            hideCookieBanner();
+            showToast('Preferencias guardadas ✓', 'success');
+        }
+
+        function rejectCookies() {
+            localStorage.setItem('cookie_consent', 'essential');
+            hideCookieBanner();
+        }
+
+        function hideCookieBanner() {
+            const banner = document.getElementById('cookie-banner');
+            if (banner) {
+                banner.classList.remove('show');
+                setTimeout(() => banner.style.display = 'none', 600);
+            }
+        }
+
+        // ===== PICKUP POINTS =====
+        const pickupData = {
+            Lima: [
+                { name: 'Agencia Olva Courier - Miraflores', address: 'Av. Larco 1150, Miraflores', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '01-234-5678' },
+                { name: 'Agencia Shalom - San Isidro', address: 'Av. Javier Prado Este 2875, San Isidro', hours: 'Lun-Sáb 8am-8pm', open: true, phone: '01-345-6789' },
+                { name: 'Agencia Olva - San Juan de Lurigancho', address: 'Av. Gran Chimú 290, SJL', hours: 'Lun-Sáb 9am-6pm', open: true, phone: '01-456-7890' },
+                { name: 'Agencia Shalom - Los Olivos', address: 'Av. Universitaria 3456, Los Olivos', hours: 'Lun-Sáb 9am-7pm', open: false, phone: '01-567-8901' },
+                { name: 'Agencia Olva - Surco', address: 'Av. Benavides 5678, Surco', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '01-678-9012' },
+                { name: 'Agencia Shalom - Callao', address: 'Av. Sáenz Peña 234, Callao', hours: 'Lun-Sáb 8am-6pm', open: true, phone: '01-789-0123' },
+            ],
+            Arequipa: [
+                { name: 'Agencia Olva - Centro Arequipa', address: 'Calle Mercaderes 234, Cercado', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '054-234-567' },
+                { name: 'Agencia Shalom - Cayma', address: 'Av. Ejército 1234, Cayma', hours: 'Lun-Sáb 9am-6pm', open: true, phone: '054-345-678' },
+                { name: 'Agencia Olva - Paucarpata', address: 'Av. Kennedy 567, Paucarpata', hours: 'Lun-Sáb 9am-6pm', open: false, phone: '054-456-789' },
+            ],
+            Trujillo: [
+                { name: 'Agencia Olva - Centro Trujillo', address: 'Jr. Pizarro 456, Centro', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '044-234-567' },
+                { name: 'Agencia Shalom - El Porvenir', address: 'Av. Sánchez Carrión 789, El Porvenir', hours: 'Lun-Sáb 8am-6pm', open: true, phone: '044-345-678' },
+                { name: 'Agencia Olva - Florencia de Mora', address: 'Av. Túpac Amaru 123, Florencia de Mora', hours: 'Lun-Sáb 9am-5pm', open: true, phone: '044-456-789' },
+            ],
+            Piura: [
+                { name: 'Agencia Olva - Centro Piura', address: 'Av. Grau 345, Centro', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '073-234-567' },
+                { name: 'Agencia Shalom - Castilla', address: 'Av. Progreso 678, Castilla', hours: 'Lun-Sáb 9am-6pm', open: true, phone: '073-345-678' },
+            ],
+            Cusco: [
+                { name: 'Agencia Olva - Centro Cusco', address: 'Av. El Sol 456, Centro', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '084-234-567' },
+                { name: 'Agencia Shalom - San Sebastián', address: 'Av. La Cultura 789, San Sebastián', hours: 'Lun-Sáb 9am-6pm', open: false, phone: '084-345-678' },
+            ],
+            Chiclayo: [
+                { name: 'Agencia Olva - Centro Chiclayo', address: 'Av. Balta 234, Centro', hours: 'Lun-Sáb 9am-7pm', open: true, phone: '074-234-567' },
+                { name: 'Agencia Shalom - La Victoria', address: 'Av. Leguía 567, La Victoria', hours: 'Lun-Sáb 9am-6pm', open: true, phone: '074-345-678' },
+            ]
+        };
+
+        function showPickupPoints(city, el) {
+            // Update active city button
+            document.querySelectorAll('.city-btn').forEach(btn => btn.classList.remove('active'));
+            if (el) el.classList.add('active');
+            else {
+                document.querySelectorAll('.city-btn').forEach(btn => {
+                    if (btn.textContent.trim() === city) btn.classList.add('active');
+                });
+            }
+            showPickupPointsDirect(city);
+        }
+
+        function detectLocation() {
+            if (!navigator.geolocation) {
+                showToast('Geolocalización no disponible', 'error');
+                return;
+            }
+            showToast('Detectando tu ubicación...', 'info');
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    // Simple lat-based city detection for Peru
+                    let city = 'Lima';
+                    if (lat < -15.5 && lat > -16.5) city = 'Arequipa';
+                    else if (lat < -8.0 && lat > -8.5) city = 'Trujillo';
+                    else if (lat < -5.0 && lat > -5.5) city = 'Piura';
+                    else if (lat < -13.0 && lat > -14.0) city = 'Cusco';
+                    else if (lat < -6.5 && lat > -7.0) city = 'Chiclayo';
+                    
+                    // Activate city button
+                    document.querySelectorAll('.city-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.textContent.trim() === city) btn.classList.add('active');
+                    });
+                    showPickupPointsDirect(city);
+                    showToast(`📍 Ciudad detectada: ${city}`, 'success');
+                },
+                () => {
+                    showToast('No se pudo detectar la ubicación', 'error');
+                }
+            );
+        }
+
+        function showPickupPointsDirect(city) {
+            const points = pickupData[city] || [];
+            const grid = document.getElementById('pickup-points-grid');
+            if (!grid) return;
+            grid.innerHTML = points.map(p => `
+                <div class="pickup-card">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1">
+                            <h5 class="font-black text-xs uppercase tracking-wide mb-1">${p.name}</h5>
+                            <p class="text-[10px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ${p.address}
+                            </p>
+                        </div>
+                        <span class="pickup-badge ${p.open ? 'pickup-badge-open' : 'pickup-badge-closed'} ml-2 flex-shrink-0">
+                            ${p.open ? '● Abierto' : '● Cerrado'}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${p.hours}</p>
+                        <a href="tel:${p.phone}" class="text-[10px] font-black text-gold hover:underline">${p.phone}</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== MOBILE CAROUSEL =====
+        function renderMobileCarousel(data) {
+            const carousel = document.getElementById('mobile-carousel');
+            const dotsContainer = document.getElementById('carousel-dots');
+            if (!carousel) return;
+
+            carousel.innerHTML = data.map((p, idx) => `
+                <div onclick="openPDP(${p.id})" class="mobile-carousel-item product-card group">
+                    <div class="aspect-[3/4] rounded-[1.5rem] overflow-hidden bg-gray-50 dark:bg-slate-800 mb-3 relative">
+                        <img src="${p.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" loading="lazy">
+                        ${getBadgeHTML(p.id)}
+                        <button class="wishlist-btn ${wishlist.includes(p.id) ? 'active' : ''}" data-id="${p.id}" onclick="toggleWishlist(${p.id}, event)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${wishlist.includes(p.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                    </div>
+                    <h4 class="text-[10px] font-black uppercase italic truncate">${p.name}</h4>
+                    <p class="text-sm text-gray-400 mt-1 italic font-light">S/ ${p.price.toFixed(2)}</p>
+                </div>
+            `).join('');
+
+            // Render dots (show max 8 dots)
+            const dotCount = Math.min(data.length, 8);
+            if (dotsContainer) {
+                dotsContainer.innerHTML = Array.from({length: dotCount}, (_, i) =>
+                    `<div class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="scrollCarouselTo(${i})"></div>`
+                ).join('');
+            }
+
+            // Update dots on scroll
+            carousel.addEventListener('scroll', () => {
+                const itemWidth = carousel.querySelector('.mobile-carousel-item')?.offsetWidth || 1;
+                const gap = 16;
+                const idx = Math.round(carousel.scrollLeft / (itemWidth + gap));
+                document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === idx);
+                });
+            }, { passive: true });
+
+            lucide.createIcons();
+            requestAnimationFrame(() => observeCards());
+        }
+
+        function scrollCarouselTo(idx) {
+            const carousel = document.getElementById('mobile-carousel');
+            if (!carousel) return;
+            const item = carousel.querySelectorAll('.mobile-carousel-item')[idx];
+            if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+
         // ===== INIT
         renderGrid(products);
+        renderMobileCarousel(products);
         renderCollections();
         renderReviews();
         updateCartUI();
+        showPickupPointsDirect('Lima');
+        initCookieBanner();
         lucide.createIcons();
         setTimeout(() => observeCards(), 100);
     

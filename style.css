@@ -16,20 +16,81 @@
         
         #loader { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* Efecto Pulsante WhatsApp */
+        /* ===== WHATSAPP FLOATING BUTTON (improved) ===== */
         .btn-whatsapp {
             position: fixed; bottom: 24px; right: 24px; z-index: 150;
-            background-color: #25D366; color: white; border-radius: 50%;
-            width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: pulse-wa 2s infinite;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white; border-radius: 50%;
+            width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5), 0 2px 8px rgba(0,0,0,0.2);
+            animation: pulse-wa 2.5s infinite;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .btn-whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 32px rgba(37, 211, 102, 0.7), 0 4px 12px rgba(0,0,0,0.3);
+            animation: none;
+        }
+        .btn-whatsapp svg { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+        .whatsapp-tooltip {
+            position: absolute; right: 76px; background: #111; color: #fff;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 6px 12px; border-radius: 8px; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+        }
+        .whatsapp-tooltip::after {
+            content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+            border: 6px solid transparent; border-left-color: #111; border-right: none;
+        }
+        .btn-whatsapp:hover .whatsapp-tooltip { opacity: 1; }
+
         @keyframes pulse-wa {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7), 0 6px 24px rgba(37,211,102,0.4); }
+            70% { transform: scale(1.06); box-shadow: 0 0 0 18px rgba(37, 211, 102, 0), 0 6px 24px rgba(37,211,102,0.4); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 6px 24px rgba(37,211,102,0.4); }
         }
 
         @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+
+        /* ===== COOKIE CONSENT BANNER ===== */
+        .cookie-banner {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 9000;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 20px 24px;
+        }
+        .cookie-banner.show { transform: translateY(0); }
+        .cookie-banner-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; gap: 20px;
+            flex-wrap: wrap;
+        }
+        .cookie-icon { font-size: 32px; flex-shrink: 0; }
+        .cookie-content { flex: 1; min-width: 200px; }
+        .cookie-title { color: #fff; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+        .cookie-text { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.6; }
+        .cookie-link { color: #D4AF37; text-decoration: underline; }
+        .cookie-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+        .cookie-btn-accept {
+            background: linear-gradient(135deg, #D4AF37, #b8962e);
+            color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 12px 24px; border-radius: 12px;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.4); border: none;
+        }
+        .cookie-btn-accept:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(212,175,55,0.6); }
+        .cookie-btn-reject {
+            background: transparent; color: rgba(255,255,255,0.5);
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; padding: 12px 20px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15); cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .cookie-btn-reject:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
 
         /* ===== TOAST NOTIFICATIONS ===== */
         #toast-container { position: fixed; top: 90px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
@@ -83,3 +144,82 @@
 
         /* ===== SELECTED SIZE INDICATOR ===== */
         #selected-size-label { font-size: 10px; font-weight: 900; color: #D4AF37; }
+
+        /* ===== MOBILE CAROUSEL ===== */
+        .mobile-carousel {
+            display: flex;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 16px;
+            padding: 4px 4px 16px 4px;
+        }
+        .mobile-carousel::-webkit-scrollbar { display: none; }
+        .mobile-carousel-item {
+            flex: 0 0 75vw;
+            max-width: 280px;
+            scroll-snap-align: center;
+            cursor: pointer;
+        }
+        .mobile-carousel-dots {
+            display: flex; justify-content: center; gap: 6px; margin-top: 12px;
+        }
+        .carousel-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #d1d5db; transition: all 0.3s ease; cursor: pointer;
+        }
+        .carousel-dot.active {
+            background: #D4AF37; width: 20px; border-radius: 3px;
+        }
+        html.dark .carousel-dot { background: #475569; }
+        html.dark .carousel-dot.active { background: #D4AF37; }
+
+        /* ===== ORDER CONFIRMATION MODAL ===== */
+        .order-success-icon {
+            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .checkmark-path {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: drawCheck 0.5s ease 0.4s forwards;
+        }
+        @keyframes drawCheck {
+            to { stroke-dashoffset: 0; }
+        }
+        .delivery-dot {
+            width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.8);
+        }
+        html.dark .delivery-dot { box-shadow: 0 0 0 3px rgba(15,23,42,0.8); }
+
+        /* ===== PICKUP POINTS ===== */
+        .pickup-card {
+            background: #fff; border-radius: 20px; padding: 20px;
+            border: 2px solid #f1f5f9;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .pickup-card:hover {
+            border-color: #D4AF37; transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(212,175,55,0.15);
+        }
+        html.dark .pickup-card { background: #1e293b; border-color: #334155; }
+        html.dark .pickup-card:hover { border-color: #D4AF37; }
+        .pickup-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 3px 10px; border-radius: 999px;
+        }
+        .pickup-badge-open { background: #dcfce7; color: #16a34a; }
+        .pickup-badge-closed { background: #fee2e2; color: #dc2626; }
+        html.dark .pickup-badge-open { background: rgba(22,163,74,0.2); color: #4ade80; }
+        html.dark .pickup-badge-closed { background: rgba(220,38,38,0.2); color: #f87171; }
+
+        .city-btn { transition: all 0.2s ease; }
+        .city-btn.active { background: #D4AF37 !important; color: #000 !important; border-color: #D4AF37 !important; }

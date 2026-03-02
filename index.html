@@ -105,6 +105,21 @@
             <div class="h-full bg-gold w-1/2 animate-[loading_1.5s_infinite]"></div>
         </div>
     </div>
+
+    <!-- ===== COOKIE CONSENT BANNER ===== -->
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-banner-inner">
+            <div class="cookie-icon">🍪</div>
+            <div class="cookie-content">
+                <h4 class="cookie-title">Privacidad y Cookies</h4>
+                <p class="cookie-text">Usamos cookies para mejorar tu experiencia de compra, personalizar contenido y analizar nuestro tráfico. Al continuar navegando, aceptas nuestra <a href="#" class="cookie-link">Política de Privacidad</a> y el uso de cookies.</p>
+            </div>
+            <div class="cookie-actions">
+                <button onclick="acceptCookies()" class="cookie-btn-accept">Aceptar todo</button>
+                <button onclick="rejectCookies()" class="cookie-btn-reject">Solo esenciales</button>
+            </div>
+        </div>
+    </div>
     
     <nav class="fixed top-0 w-full z-[100] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 h-16 md:h-20 flex justify-between items-center">
@@ -125,7 +140,7 @@
                 </div>
                 
                 <div class="relative">
-                    <input type="text" onkeyup="searchProducts(this.value)" placeholder="Buscar producto..." 
+                    <input type="text" onkeyup="searchProducts(this.value)" placeholder="Buscar producto en M & A..." 
                         class="bg-gray-100 dark:bg-slate-800 rounded-full py-2 px-10 text-xs w-56 focus:w-72 transition-all outline-none border border-transparent focus:border-gold">
                     <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
                 </div>
@@ -178,8 +193,12 @@
     <!-- Overlay (cierra carrito/menú al hacer click fuera) -->
     <div id="overlay" onclick="closeAllDrawers()"></div>
 
-    <a href="https://wa.me/51924996961?text=Hola%20M%20%26%20A%20Home%20%26%20Style,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp">
-        <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
+    <!-- ===== WHATSAPP FLOATING BUTTON (improved with real WhatsApp icon) ===== -->
+    <a href="https://wa.me/51924996961?text=Hola%20M%20%26%20A%20Home%20%26%20Style,%20tengo%20una%20consulta" target="_blank" class="btn-whatsapp" aria-label="Contactar por WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span class="whatsapp-tooltip">¡Escríbenos!</span>
     </a>
 
     <main id="home-view" class="view active animate__animated animate__fadeIn">
@@ -214,7 +233,38 @@
 
         <section class="max-w-7xl mx-auto px-4 py-20">
             <h3 id="cat-title" class="text-3xl font-black uppercase italic mb-12 tracking-tighter">Explora la tienda</h3>
-            <div id="grid-container" class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"></div>
+            <!-- Desktop: 6 columns grid | Mobile: horizontal scroll carousel -->
+            <div id="grid-container" class="hidden md:grid md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6"></div>
+            <!-- Mobile carousel -->
+            <div id="mobile-carousel-wrapper" class="md:hidden relative">
+                <div id="mobile-carousel" class="mobile-carousel"></div>
+                <div class="mobile-carousel-dots" id="carousel-dots"></div>
+            </div>
+        </section>
+
+        <!-- Puntos de Recojo -->
+        <section class="max-w-7xl mx-auto px-4 py-16">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-3xl font-black uppercase italic tracking-tighter">Puntos de Recojo</h3>
+                <button onclick="detectLocation()" class="flex items-center gap-2 bg-gold text-black font-black text-[10px] uppercase tracking-widest px-5 py-3 rounded-full hover:scale-105 transition-transform">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    Detectar mi ubicación
+                </button>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-8 uppercase tracking-widest font-bold">Selecciona tu ciudad para ver los puntos de recojo disponibles</p>
+            
+            <!-- City Selector -->
+            <div class="flex flex-wrap gap-3 mb-10" id="city-selector">
+                <button onclick="showPickupPoints('Lima', this)" class="city-btn active px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gold bg-gold text-black transition-all">Lima</button>
+                <button onclick="showPickupPoints('Arequipa', this)" class="city-btn px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-200 dark:border-slate-700 hover:border-gold transition-all">Arequipa</button>
+                <button onclick="showPickupPoints('Trujillo', this)" class="city-btn px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-200 dark:border-slate-700 hover:border-gold transition-all">Trujillo</button>
+                <button onclick="showPickupPoints('Piura', this)" class="city-btn px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-200 dark:border-slate-700 hover:border-gold transition-all">Piura</button>
+                <button onclick="showPickupPoints('Cusco', this)" class="city-btn px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-200 dark:border-slate-700 hover:border-gold transition-all">Cusco</button>
+                <button onclick="showPickupPoints('Chiclayo', this)" class="city-btn px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-200 dark:border-slate-700 hover:border-gold transition-all">Chiclayo</button>
+            </div>
+
+            <!-- Pickup Points Grid -->
+            <div id="pickup-points-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <!-- Colecciones destacadas -->
@@ -341,6 +391,7 @@
         </div>
     </div>
 
+    <!-- ===== PAYMENT MODAL (with Yape & Interbank logos) ===== -->
     <div id="payment-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
         <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-md p-10 animate__animated animate__zoomIn">
             <div class="flex justify-between items-center mb-10">
@@ -348,15 +399,133 @@
                 <button onclick="closePaymentModal()"><i data-lucide="x"></i></button>
             </div>
             <div class="space-y-4">
-                <button onclick="sendOrder('YAPE')" class="w-full bg-[#742484] text-white p-6 rounded-2xl flex items-center justify-between group">
-                    <span class="font-black italic">YAPE / PLIN </span>
-                    <span class="text-[9px] font-bold mt-1 opacity-70 italic"> 924 996 961</span>
-                    <i data-lucide="smartphone"></i>
+                <!-- YAPE button with logo -->
+                <button onclick="sendOrder('YAPE')" class="w-full bg-[#742484] text-white p-5 rounded-2xl flex items-center gap-4 group hover:bg-[#5e1a6e] transition-all hover:scale-[1.02] shadow-lg">
+                    <!-- Yape Logo SVG -->
+                    <div class="flex-shrink-0 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md">
+                        <svg viewBox="0 0 60 60" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="#742484"/>
+                            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="18" fill="white">Y</text>
+                            <path d="M18 22 L30 38 L42 22" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <span class="font-black text-sm block">YAPE / PLIN</span>
+                        <span class="text-[10px] font-bold opacity-80 italic">📱 924 996 961</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 opacity-60"></i>
                 </button>
-                <button onclick="sendOrder('INTERBANK')" class="w-full bg-[#0039A6] text-white p-6 rounded-2xl flex flex-col items-start relative group">
-                    <span class="font-black italic">TRANSFERENCIA BANCARIA</span>
-                    <span class="text-[9px] font-bold mt-1 opacity-70 italic">INTERBANK: 003-773-013259712394-93</span>
-                    <i data-lucide="credit-card" class="absolute right-4 top-6 opacity-20 w-12 h-12"></i>
+
+                <!-- INTERBANK button with logo -->
+                <button onclick="sendOrder('INTERBANK')" class="w-full bg-[#0039A6] text-white p-5 rounded-2xl flex items-center gap-4 group hover:bg-[#002d85] transition-all hover:scale-[1.02] shadow-lg">
+                    <!-- Interbank Logo SVG -->
+                    <div class="flex-shrink-0 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md overflow-hidden">
+                        <svg viewBox="0 0 80 40" width="56" height="28" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="80" height="40" fill="white"/>
+                            <!-- Interbank "I" stylized -->
+                            <rect x="8" y="8" width="6" height="24" rx="2" fill="#0039A6"/>
+                            <rect x="6" y="8" width="10" height="5" rx="1.5" fill="#0039A6"/>
+                            <rect x="6" y="27" width="10" height="5" rx="1.5" fill="#0039A6"/>
+                            <!-- Green accent bar -->
+                            <rect x="20" y="8" width="4" height="24" rx="2" fill="#00A651"/>
+                            <!-- Text "IB" -->
+                            <text x="28" y="28" font-family="Arial Black, sans-serif" font-weight="900" font-size="18" fill="#0039A6">IB</text>
+                        </svg>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <span class="font-black text-sm block">TRANSFERENCIA BANCARIA</span>
+                        <span class="text-[10px] font-bold opacity-80 italic">003-773-013259712394-93</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 opacity-60"></i>
+                </button>
+            </div>
+            <p class="text-center text-[9px] text-gray-400 mt-6 uppercase tracking-widest">Pago 100% seguro · Confirmación inmediata</p>
+        </div>
+    </div>
+
+    <!-- ===== ORDER CONFIRMATION MODAL ===== -->
+    <div id="order-confirmation-modal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-lg p-8 md:p-12 animate__animated animate__zoomIn overflow-y-auto max-h-[90vh]">
+            <!-- Success Animation -->
+            <div class="text-center mb-8">
+                <div class="order-success-icon mx-auto mb-6">
+                    <svg viewBox="0 0 80 80" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="40" cy="40" r="38" fill="#22c55e" opacity="0.15"/>
+                        <circle cx="40" cy="40" r="30" fill="#22c55e"/>
+                        <path d="M24 40 L35 51 L56 29" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" class="checkmark-path"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-black uppercase italic text-green-500 mb-2">¡Gracias por tu compra!</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Tu pedido ha sido recibido con éxito</p>
+            </div>
+
+            <!-- Order Details -->
+            <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Número de Pedido</span>
+                    <span id="order-number" class="font-black text-gold text-lg">#MA-000000</span>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Correo de Confirmación</span>
+                    <span id="order-email" class="font-bold text-xs text-right max-w-[180px] truncate">pedidos@mandahomestyle.com</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Método de Pago</span>
+                    <span id="order-method" class="font-black text-xs uppercase">—</span>
+                </div>
+            </div>
+
+            <!-- Delivery Timeline -->
+            <div class="mb-6">
+                <h4 class="text-[10px] font-black uppercase tracking-widest mb-4 text-gray-500">¿Cuándo llega tu pedido?</h4>
+                <div class="space-y-3">
+                    <div class="delivery-step flex items-start gap-4">
+                        <div class="delivery-dot bg-green-500"></div>
+                        <div>
+                            <p class="text-xs font-black uppercase">Pedido Confirmado</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">Hoy · Inmediatamente</p>
+                        </div>
+                    </div>
+                    <div class="delivery-step flex items-start gap-4">
+                        <div class="delivery-dot bg-gold"></div>
+                        <div>
+                            <p class="text-xs font-black uppercase">Preparación del Pedido</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">1 - 2 días hábiles</p>
+                        </div>
+                    </div>
+                    <div class="delivery-step flex items-start gap-4">
+                        <div class="delivery-dot bg-blue-500"></div>
+                        <div>
+                            <p class="text-xs font-black uppercase">En Camino · Olva / Shalom</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">2 - 5 días hábiles según tu ciudad</p>
+                        </div>
+                    </div>
+                    <div class="delivery-step flex items-start gap-4">
+                        <div class="delivery-dot bg-gray-300 dark:bg-slate-600"></div>
+                        <div>
+                            <p class="text-xs font-black uppercase text-gray-400">Entrega en tu domicilio</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">Estimado: 3 - 7 días hábiles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div id="order-summary-items" class="border-t dark:border-slate-700 pt-4 mb-6 space-y-2 max-h-40 overflow-y-auto"></div>
+
+            <div class="flex items-center justify-between text-xl font-black mb-8">
+                <span>TOTAL PAGADO</span>
+                <span id="order-total" class="text-gold">S/ 0.00</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col gap-3">
+                <button onclick="shareOrderWhatsApp()" class="w-full bg-[#25D366] text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Confirmar por WhatsApp
+                </button>
+                <button onclick="closeOrderConfirmation()" class="w-full border-2 border-gray-200 dark:border-slate-700 font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest hover:border-gold transition-colors">
+                    Seguir Comprando
                 </button>
             </div>
         </div>
